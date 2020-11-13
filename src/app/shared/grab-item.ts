@@ -6,7 +6,7 @@ export abstract class Item {
     rmodel: number[];
     itemType: string;
 
-    grabItem(round: number): void {
+    grabItem(name: string, round: number): void {
         let amount: number;
         const updates = {};
         this.db.database.ref('cart/' + this.itemType).once('value').then(result => {
@@ -14,7 +14,7 @@ export abstract class Item {
             console.log(amount);
             updates['cart/' + this.itemType] = amount + 1;
             this.db.database.ref().update(updates);
-            console.log('is grabbing item in ' + this.rmodel[(round % 5) - 1] + ' aisle.');
+            console.log(name + ' is grabbing item in ' + this.rmodel[(round % 5) - 1] + ' aisle.');
         });
     }
 }

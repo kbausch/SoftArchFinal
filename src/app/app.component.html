@@ -1,43 +1,22 @@
 <div id="topPanel" class="row text-center m-1">
-  <h1 class="col-12">Round</h1>
-  <div class="col-3 m-2 bg-secondary">
-    <h2><u>Aisle 1</u></h2>
-    <div *ngFor="let item of storeContent">
-      <button *ngIf="item.rmodel[round % 5] == 1" (click)="item.grabItem(round)">{{item.itemType}}</button>
+  <h1 class="col-12"><u>Round {{round}}</u></h1>
+  <div *ngFor="let i of [1,2]" class="col-3 m-2 bg-secondary d-flex flex-wrap align-content-stretch">
+    <h2 class="col-12"><u>Aisle {{i}}</u></h2>
+    <div *ngFor="let item of storeContent" class="col-12">
+      <button *ngIf="item.rmodel[round % 5] == i" (click)="item.grabItem(round)" class="btn-block">{{item.itemType}}</button>
     </div>
   </div>
-  <div class="col-3 m-2 bg-secondary">
-    <h2><u>Aisle 2</u></h2>
-    <div *ngFor="let item of storeContent">
-      <button *ngIf="item.rmodel[round % 5] == 2" (click)="item.grabItem(round)">{{item.itemType}}</button>
-    </div>
-  </div>
-  <div class="col m-2 bg-secondary">
+  <div class="col m-2 bg-secondary" style="height: 50vh">
     <!--Logs here-->
   </div>
 </div>
 
 <div id="bottomPanel" class="row text-center m-1 mt-5">
   <button class="btn mx-2 btn-block btn-warning">Peek Cart</button>
-  <button class="btn mx-2 btn-block btn-success">Round</button>
-  <div class="col m-2 bg-secondary">
-    <h2><u>Marcus</u></h2>
-    <button class="btn btn-block btn-success"></button>
-  </div>
-  <div class="col m-2 bg-secondary">
-    <h2><u>Justin</u></h2>
-    <button class="btn btn-block btn-success"></button>
-  </div>
-  <div class="col m-2 bg-secondary">
-    <h2><u>Jacob</u></h2>
-    <button class="btn btn-block btn-success"></button>
-  </div>
-  <div class="col m-2 bg-secondary">
-    <h2><u>Jacob 2</u></h2>
-    <button class="btn btn-block btn-success"></button>
-  </div>
-  <div class="col m-2 bg-secondary">
-    <h2><u>Kaleb</u></h2>
-    <button class="btn btn-block btn-success"></button>
+  <button class="btn mx-2 btn-block btn-success" [disabled]="round<5">Check Out</button>
+  <div *ngFor="let player of playerList" class="col m-2 bg-secondary p-2 rounded">
+    <h2><u>{{player.name}}</u></h2>
+    <button class="btn btn-block btn-success" [disabled]="!playerActive" (click)="playerActive = false">Select Player</button>
+    <button class="btn btn-block btn-danger" [disabled]="playerActive" (click)="playerActive = true">UnSelect Player</button>
   </div>
 </div>
