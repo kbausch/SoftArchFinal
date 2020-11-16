@@ -3,20 +3,30 @@
   <div *ngFor="let i of [1,2]" class="col-3 m-2 bg-secondary d-flex flex-wrap align-content-stretch">
     <h2 class="col-12"><u>Aisle {{i}}</u></h2>
     <div *ngFor="let item of storeContent" class="col-12">
-      <button *ngIf="item.rmodel[round % 5] == i" (click)="item.grabItem(round)" class="btn-block">{{item.itemType}}</button>
+      <button *ngIf="item.rmodel[round % 5] == i" (click)="activePlayer.grabItem(item,round)" class="btn-block"
+        [disabled]="!activePlayer || !activePlayer.action">{{item.itemType}}</button>
     </div>
   </div>
-  <div class="col m-2 bg-secondary" style="height: 50vh">
-    <!--Logs here-->
+  <div class="col m-2 bg-secondary overflow-auto" style="height: 50vh">
+    <div *ngFor="let log of logsList | keyvalue">
+      {{log.value.payload.val()}}
+    </div>
   </div>
 </div>
 
 <div id="bottomPanel" class="row text-center m-1 mt-5">
-  <button class="btn mx-2 btn-block btn-warning">Peek Cart</button>
-  <button class="btn mx-2 btn-block btn-success" [disabled]="round<5">Check Out</button>
+  <button class="btn mx-2 btn-block btn-warning" [disabled]="!activePlayer || !activePlayer.action"
+    (click)="peekCart(activePlayer)">Peek Cart</button>
+  <div *ngFor="let item of shoppingList | keyvalue" class="col m-2 bg-secondary p-2 rounded">
+    {{item.key}} : {{item.value}}
+  </div>
+  <button class="btn mx-2 btn-block btn-success" [disabled]="round<5 || !activePlayer || !activePlayer.action"
+    (click)="checkOut(activePlayer)">Check Out</button>
   <div *ngFor="let player of playerList" class="col m-2 bg-secondary p-2 rounded">
     <h2><u>{{player.name}}</u></h2>
-    <button class="btn btn-block btn-success" [disabled]="!playerActive" (click)="playerActive = false">Select Player</button>
-    <button class="btn btn-block btn-danger" [disabled]="playerActive" (click)="playerActive = true">UnSelect Player</button>
+    <button class="btn btn-block btn-success" [disabled]="hasChar(player.name) || activePlayer"
+      (click)="activePlayer = player; activePlayer.toggleChar(true)">Select Player</button>
+    <button class="btn btn-block btn-danger" [disabled]="!hasChar(player.name) || activePlayer !== player"
+      (click)="activePlayer.toggleChar(false); activePlayer = undefined;">UnSelect Player</button>
   </div>
 </div>

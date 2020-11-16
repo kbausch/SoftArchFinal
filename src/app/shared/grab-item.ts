@@ -7,14 +7,16 @@ export abstract class Item {
     itemType: string;
 
     grabItem(name: string, round: number): void {
-        let amount: number;
         const updates = {};
         this.db.database.ref('cart/' + this.itemType).once('value').then(result => {
-            amount = result.val();
-            console.log(amount);
+            let amount = result.val();
             updates['cart/' + this.itemType] = amount + 1;
             this.db.database.ref().update(updates);
-            console.log(name + ' is grabbing item in ' + this.rmodel[(round % 5) - 1] + ' aisle.');
+            this.db.database.ref('logs').once('value').then(result => {
+                let temp = result.val();
+                temp.push(name + ' is grabbing item in ' + this.rmodel[round % 5] + ' aisle.');
+                this.db.database.ref().update({ logs: temp });
+            });
         });
     }
 }
