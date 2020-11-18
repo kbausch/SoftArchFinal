@@ -17,7 +17,11 @@ export class AppComponent {
 
   constructor(private db: AngularFireDatabase) {
     db.list('/players').snapshotChanges().subscribe(result => this.charSubList = result);
-    db.list('/').snapshotChanges().subscribe(result => this.round = result[4].payload.val());
+    db.list('/').snapshotChanges().subscribe(result => {
+      if (result[4]) {
+        this.round = result[4].payload.val();
+      }
+    });
     db.list('/logs').snapshotChanges().subscribe(result => this.logsList = result);
   }
 
@@ -25,7 +29,7 @@ export class AppComponent {
   activePlayer: Shopper;
 
   hasChar(name: string) {
-    if (this.charSubList) {
+    if (this.charSubList && name) {
       return this.charSubList.find(character => character.key === name).payload.val();
     }
   }

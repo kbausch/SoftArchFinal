@@ -1,5 +1,5 @@
 <div id="topPanel" class="row text-center m-1">
-  <h1 class="col-12"><u>Round {{round}}</u></h1>
+  <h1 class="col-12"><u>Round {{round - 1}}</u></h1>
   <div *ngFor="let i of [1,2]" class="col-3 m-2 bg-secondary d-flex flex-wrap align-content-stretch">
     <h2 class="col-12"><u>Aisle {{i}}</u></h2>
     <div *ngFor="let item of storeContent" class="col-12">
@@ -21,7 +21,7 @@
     {{item.key}} : {{item.value}}
   </div>
   <button class="btn mx-2 btn-block btn-success" [disabled]="round<5 || !activePlayer || !activePlayer.action"
-    (click)="checkOut(activePlayer)">Check Out</button>
+    (click)="activePlayer.checkOut()">Check Out</button>
   <div *ngFor="let player of playerList" class="col m-2 bg-secondary p-2 rounded">
     <h2><u>{{player.name}}</u></h2>
     <button class="btn btn-block btn-success" [disabled]="hasChar(player.name) || activePlayer"

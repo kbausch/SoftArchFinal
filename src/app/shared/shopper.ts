@@ -2,7 +2,11 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { Item } from './grab-item';
 
 export abstract class Shopper {
-    constructor(private db: AngularFireDatabase) { }
+    constructor(private db: AngularFireDatabase) {
+        db.database.ref('playerMove/').on('value', snapshot => {
+            this.action = snapshot.val()[this.name];
+        });
+    }
 
     public name: string;
     public action = true;
@@ -14,7 +18,7 @@ export abstract class Shopper {
                 temp.push(this.name + ' is checking out!');
                 this.db.database.ref().update({ logs: temp });
             });
-            this.db.database.ref().update({ round: 0 });
+            this.db.database.ref().update({ round: 1 });
             this.db.database.ref().update({ playerMove: { Jacob: true, Jacob2: true, Justin: true, Kaleb: true, Marcus: true } });
             this.db.database.ref('logs').remove().then(_ => {
                 this.db.database.ref().update({ logs: { 0: 'THIS IS THE ACTION LOG' } });
@@ -40,6 +44,7 @@ export abstract class Shopper {
         this.db.database.ref().update(update).then(_ => {
             this.db.database.ref('/playerMove').once('value').then(result => {
                 if (Object.values(result.val()).every((value) => value === false)) {
+                    console.log(round);
                     this.db.database.ref().update({ round: round + 1 });
                     this.db.database.ref().update({ playerMove: { Jacob: true, Jacob2: true, Justin: true, Kaleb: true, Marcus: true } });
                 } else {
